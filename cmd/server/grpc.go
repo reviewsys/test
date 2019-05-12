@@ -3,9 +3,9 @@ package main
 import (
 	"time"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
-	"github.com/grpc-ecosystem/go-grpc-middleware/validator"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
+	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/infobloxopen/atlas-app-toolkit/gateway"
 	"github.com/infobloxopen/atlas-app-toolkit/requestid"
 	"github.com/reviewsys/test/pkg/pb"
@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
+	"google.golang.org/grpc/reflection"
 )
 
 func NewGRPCServer(logger *logrus.Logger) (*grpc.Server, error) {
@@ -47,6 +48,7 @@ func NewGRPCServer(logger *logrus.Logger) (*grpc.Server, error) {
 		return nil, err
 	}
 	pb.RegisterTestServer(grpcServer, s)
+	reflection.Register(grpcServer)
 
 	return grpcServer, nil
 }
